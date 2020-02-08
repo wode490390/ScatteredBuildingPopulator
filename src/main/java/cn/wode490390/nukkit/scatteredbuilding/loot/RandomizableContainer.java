@@ -1,30 +1,51 @@
 package cn.wode490390.nukkit.scatteredbuilding.loot;
 
-import cn.nukkit.inventory.Inventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.math.NukkitRandom;
+import cn.nukkit.nbt.NBTIO;
+import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.nbt.tag.ListTag;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
 
-public abstract class RandomizableContainer {
+public class RandomizableContainer {
 
-    public void create(Inventory inventory, NukkitRandom random) {
-        this.getPools().forEach((pool, roll) -> {
+    protected final Map<List<ItemEntry>, RollEntry> pools;
+    protected final int size;
+
+    public RandomizableContainer(Map<List<ItemEntry>, RollEntry> pools, int size) {
+        Preconditions.checkNotNull(pools);
+        this.pools = pools;
+        this.size = size;
+    }
+
+    public void create(ListTag<CompoundTag> list, NukkitRandom random) {
+        CompoundTag[] tags = new CompoundTag[this.size];
+
+        this.pools.forEach((pool, roll) -> {
             for (int i = roll.getMin() == -1 ? roll.getMax() : random.nextRange(roll.getMin(), roll.getMax()); i > 0; --i) {
                 int result = random.nextBoundedInt(roll.getTotalWeight());
                 for (ItemEntry entry : pool) {
                     result -=  entry.getWeight();
                     if (result < 0) {
-                        inventory.setItem(random.nextBoundedInt(inventory.getSize()), Item.get(entry.getId(), entry.getMeta(), random.nextRange(entry.getMinCount(), entry.getMaxCount())), false);
+                        int index = random.nextBoundedInt(tags.length);
+                        tags[index] = NBTIO.putItemHelper(Item.get(entry.getId(), entry.getMeta(), random.nextRange(entry.getMinCount(), entry.getMaxCount())), index);
                         break;
                     }
                 }
             }
         });
-    }
 
-    public abstract Map<List<ItemEntry>, RollEntry> getPools();
+        for (int i = 0; i < tags.length; i++) {
+            if (tags[i] == null) {
+                list.add(i, NBTIO.putItemHelper(Item.get(Item.AIR), i));
+            } else {
+                list.add(i, tags[i]);
+            }
+        }
+    }
 
     protected static class RollEntry {
 

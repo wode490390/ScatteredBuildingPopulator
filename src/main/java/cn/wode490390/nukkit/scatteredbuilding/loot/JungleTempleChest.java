@@ -1,15 +1,20 @@
 package cn.wode490390.nukkit.scatteredbuilding.loot;
 
+import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.item.Item;
 import com.google.common.collect.Maps;
-import java.util.List;
-import java.util.Map;
 
 public class JungleTempleChest extends RandomizableContainer {
 
-    private static final Map<List<ItemEntry>, RollEntry> pools = Maps.newHashMap();
+    private static final JungleTempleChest INSTANCE = new JungleTempleChest();
 
-    static {
+    public static JungleTempleChest get() {
+        return INSTANCE;
+    }
+
+    private JungleTempleChest() {
+        super(Maps.newHashMap(), InventoryType.CHEST.getDefaultSize());
+
         PoolBuilder pool1 = new PoolBuilder()
                 .register(new ItemEntry(Item.DIAMOND, 0, 3, 1, 15))
                 .register(new ItemEntry(Item.IRON_INGOT, 0, 5, 1, 50))
@@ -23,17 +28,6 @@ public class JungleTempleChest extends RandomizableContainer {
                 .register(new ItemEntry(Item.GOLD_HORSE_ARMOR, 5))
                 .register(new ItemEntry(Item.DIAMOND_HORSE_ARMOR, 5))
                 .register(new ItemEntry(Item.ENCHANTED_BOOK, 6)); //TODO: ench nbt
-        pools.put(pool1.build(), new RollEntry(6, 2, pool1.getTotalWeight()));
+        this.pools.put(pool1.build(), new RollEntry(6, 2, pool1.getTotalWeight()));
     }
-
-    private JungleTempleChest() {
-
-    }
-
-    @Override
-    public Map<List<ItemEntry>, RollEntry> getPools() {
-        return pools;
-    }
-
-    public static final JungleTempleChest INSTANCE = new JungleTempleChest();
 }

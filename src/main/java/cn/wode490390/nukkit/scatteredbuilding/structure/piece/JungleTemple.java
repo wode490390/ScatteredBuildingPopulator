@@ -2,10 +2,11 @@ package cn.wode490390.nukkit.scatteredbuilding.structure.piece;
 
 import cn.nukkit.block.Block;
 import cn.nukkit.blockentity.BlockEntity;
-import cn.nukkit.blockentity.BlockEntityChest;
 import cn.nukkit.level.ChunkManager;
 import cn.nukkit.math.BlockVector3;
 import cn.nukkit.math.NukkitRandom;
+import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.nbt.tag.ListTag;
 import cn.wode490390.nukkit.scatteredbuilding.ScatteredBuildingPopulator;
 import cn.wode490390.nukkit.scatteredbuilding.loot.JungleTempleChest;
 import cn.wode490390.nukkit.scatteredbuilding.structure.StructureBuilder;
@@ -177,9 +178,13 @@ public class JungleTemple extends ScatteredStructurePiece {
         builder.fill(new BlockVector3(8, 2, 9), new BlockVector3(8, 2, 10), Block.REDSTONE_WIRE);
         builder.setBlock(new BlockVector3(10, 2, 10), Block.UNPOWERED_REPEATER, 0 + 4); // N
         builder.setBlock(new BlockVector3(8, 1, 3), Block.CHEST, 4); // E
-        JungleTempleChest.INSTANCE.create(((BlockEntityChest) builder.setTile(new BlockVector3(8, 1, 3), BlockEntity.CHEST)).getRealInventory(), random);
+        ListTag<CompoundTag> chestE = new ListTag<>("Items");
+        JungleTempleChest.get().create(chestE, random);
+        builder.setTile(new BlockVector3(8, 1, 3), BlockEntity.CHEST, new CompoundTag().putList(chestE));
         builder.setBlock(new BlockVector3(9, 1, 10), Block.CHEST, 2); // S
-        JungleTempleChest.INSTANCE.create(((BlockEntityChest) builder.setTile(new BlockVector3(9, 1, 10), BlockEntity.CHEST)).getRealInventory(), random);
+        ListTag<CompoundTag> chestS = new ListTag<>("Items");
+        JungleTempleChest.get().create(chestS, random);
+        builder.setTile(new BlockVector3(9, 1, 10), BlockEntity.CHEST, new CompoundTag().putList(chestS));
 
         // 2nd floor inside
         for (int i = 0; i < 4; i++) {

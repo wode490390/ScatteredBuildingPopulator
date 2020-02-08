@@ -1,5 +1,6 @@
 package cn.wode490390.nukkit.scatteredbuilding.structure;
 
+import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.level.ChunkManager;
@@ -8,6 +9,8 @@ import cn.nukkit.math.BlockVector3;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.wode490390.nukkit.scatteredbuilding.ScatteredBuildingPopulator;
+import cn.wode490390.nukkit.scatteredbuilding.scheduler.TileSyncTask;
 import cn.wode490390.nukkit.scatteredbuilding.structure.piece.StructurePiece;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -63,10 +66,9 @@ public class StructureBuilder {
      *
      * @param pos a point relative to this structure's root point
      * @param id the new block entity id
-     * @return the new block entity
      */
-    public BlockEntity setTile(BlockVector3 pos, String id) {
-        return this.setTile(pos, id, null);
+    public void setTile(BlockVector3 pos, String id) {
+        this.setTile(pos, id, null);
     }
 
     /**
@@ -75,18 +77,15 @@ public class StructureBuilder {
      * @param pos a point relative to this structure's root point
      * @param id the new block entity id
      * @param data extra nbt data
-     * @return the new block entity
      */
-    public BlockEntity setTile(BlockVector3 pos, String id, CompoundTag data) {
+    public void setTile(BlockVector3 pos, String id, CompoundTag data) {
         BlockVector3 vec = this.translate(pos);
         BaseFullChunk chunk = this.level.getChunk(vec.x >> 4, vec.z >> 4);
         CompoundTag nbt = BlockEntity.getDefaultCompound(new Vector3(vec.x, vec.y, vec.z), id);
         if (data != null) {
             data.getTags().forEach((key, value) -> nbt.put(key, value));
         }
-        BlockEntity tile = BlockEntity.createBlockEntity(id, chunk, nbt);
-        chunk.addBlockEntity(tile);
-        return tile;
+        Server.getInstance().getScheduler().scheduleTask(ScatteredBuildingPopulator.getInstance(), new TileSyncTask(id, chunk, nbt));
     }
 
     /**

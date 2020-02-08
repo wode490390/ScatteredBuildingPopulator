@@ -2,10 +2,11 @@ package cn.wode490390.nukkit.scatteredbuilding.structure.piece;
 
 import cn.nukkit.block.Block;
 import cn.nukkit.blockentity.BlockEntity;
-import cn.nukkit.blockentity.BlockEntityChest;
 import cn.nukkit.level.ChunkManager;
 import cn.nukkit.math.BlockVector3;
 import cn.nukkit.math.NukkitRandom;
+import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.nbt.tag.ListTag;
 import cn.wode490390.nukkit.scatteredbuilding.ScatteredBuildingPopulator;
 import cn.wode490390.nukkit.scatteredbuilding.loot.DesertPyramidChest;
 import cn.wode490390.nukkit.scatteredbuilding.structure.StructureBuilder;
@@ -178,13 +179,21 @@ public class DesertPyramid extends ScatteredStructurePiece {
         builder.setBlock(new BlockVector3(10, 3, 10), Block.STONE_PRESSURE_PLATE);
 
         builder.setBlock(new BlockVector3(10, 3, 12), Block.CHEST, 2); // S
-        DesertPyramidChest.INSTANCE.create(((BlockEntityChest) builder.setTile(new BlockVector3(10, 3, 12), BlockEntity.CHEST)).getRealInventory(), random);
+        ListTag<CompoundTag> chestS = new ListTag<>("Items");
+        DesertPyramidChest.get().create(chestS, random);
+        builder.setTile(new BlockVector3(10, 3, 12), BlockEntity.CHEST, new CompoundTag().putList(chestS));
         builder.setBlock(new BlockVector3(8, 3, 10), Block.CHEST, 5); // W
-        DesertPyramidChest.INSTANCE.create(((BlockEntityChest) builder.setTile(new BlockVector3(8, 3, 10), BlockEntity.CHEST)).getRealInventory(), random);
+        ListTag<CompoundTag> chestW = new ListTag<>("Items");
+        DesertPyramidChest.get().create(chestW, random);
+        builder.setTile(new BlockVector3(8, 3, 10), BlockEntity.CHEST, new CompoundTag().putList(chestW));
         builder.setBlock(new BlockVector3(10, 3, 8), Block.CHEST, 3); // N
-        DesertPyramidChest.INSTANCE.create(((BlockEntityChest) builder.setTile(new BlockVector3(10, 3, 8), BlockEntity.CHEST)).getRealInventory(), random);
+        ListTag<CompoundTag> chestN = new ListTag<>("Items");
+        DesertPyramidChest.get().create(chestN, random);
+        builder.setTile(new BlockVector3(10, 3, 8), BlockEntity.CHEST, new CompoundTag().putList(chestN));
         builder.setBlock(new BlockVector3(12, 3, 10), Block.CHEST, 4); // E
-        DesertPyramidChest.INSTANCE.create(((BlockEntityChest) builder.setTile(new BlockVector3(12, 3, 10), BlockEntity.CHEST)).getRealInventory(), random);
+        ListTag<CompoundTag> chestE = new ListTag<>("Items");
+        DesertPyramidChest.get().create(chestE, random);
+        builder.setTile(new BlockVector3(12, 3, 10), BlockEntity.CHEST, new CompoundTag().putList(chestE));
 
         ScatteredBuildingPopulator.debug(getClass().getSimpleName(), this.boundingBox.getMin().x, this.boundingBox.getMin().y, this.boundingBox.getMin().z);
     }

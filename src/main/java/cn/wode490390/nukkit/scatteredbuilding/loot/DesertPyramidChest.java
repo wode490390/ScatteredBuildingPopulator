@@ -1,15 +1,20 @@
 package cn.wode490390.nukkit.scatteredbuilding.loot;
 
+import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.item.Item;
 import com.google.common.collect.Maps;
-import java.util.List;
-import java.util.Map;
 
 public class DesertPyramidChest extends RandomizableContainer {
 
-    private static final Map<List<ItemEntry>, RollEntry> pools = Maps.newHashMap();
+    private static final DesertPyramidChest INSTANCE = new DesertPyramidChest();
 
-    static {
+    public static DesertPyramidChest get() {
+        return INSTANCE;
+    }
+
+    private DesertPyramidChest() {
+        super(Maps.newHashMap(), InventoryType.CHEST.getDefaultSize());
+
         PoolBuilder pool1 = new PoolBuilder()
                 .register(new ItemEntry(Item.DIAMOND, 0, 3, 1, 5))
                 .register(new ItemEntry(Item.IRON_INGOT, 0, 5, 1, 15))
@@ -26,7 +31,7 @@ public class DesertPyramidChest extends RandomizableContainer {
                 .register(new ItemEntry(Item.GOLDEN_APPLE, 20))
                 .register(new ItemEntry(Item.GOLDEN_APPLE_ENCHANTED, 2))
                 .register(new ItemEntry(Item.AIR, 15));
-        pools.put(pool1.build(), new RollEntry(4, 2, pool1.getTotalWeight()));
+        this.pools.put(pool1.build(), new RollEntry(4, 2, pool1.getTotalWeight()));
 
         PoolBuilder pool2 = new PoolBuilder()
                 .register(new ItemEntry(Item.BONE, 0, 8, 1, 10))
@@ -34,17 +39,6 @@ public class DesertPyramidChest extends RandomizableContainer {
                 .register(new ItemEntry(Item.ROTTEN_FLESH, 0, 8, 1, 10))
                 .register(new ItemEntry(Item.STRING, 0, 8, 1, 10))
                 .register(new ItemEntry(Item.SAND, 0, 8, 1, 10));
-        pools.put(pool2.build(), new RollEntry(4, pool2.getTotalWeight()));
+        this.pools.put(pool2.build(), new RollEntry(4, pool2.getTotalWeight()));
     }
-
-    private DesertPyramidChest() {
-
-    }
-
-    @Override
-    public Map<List<ItemEntry>, RollEntry> getPools() {
-        return pools;
-    }
-
-    public static final DesertPyramidChest INSTANCE = new DesertPyramidChest();
 }

@@ -7,7 +7,7 @@
     <groupId>cn.wode490390.nukkit</groupId>
     <artifactId>scatteredbuildingpopulator</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <name>ScatteredBuildingPopulator</name>
     <description>Scattered building populator plugin for Nukkit</description>
     <url>http://wode490390.cn/</url>

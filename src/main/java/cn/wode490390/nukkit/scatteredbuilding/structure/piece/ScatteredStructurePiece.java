@@ -5,8 +5,35 @@ import cn.nukkit.level.ChunkManager;
 import cn.nukkit.math.BlockVector3;
 import cn.nukkit.math.NukkitRandom;
 import cn.wode490390.nukkit.scatteredbuilding.structure.StructureBoundingBox;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 
 public abstract class ScatteredStructurePiece implements StructurePiece {
+
+    private static final IntList PLANTS = new IntArrayList(){
+        {
+            add(Block.LOG);
+            add(Block.LEAVES);
+            add(Block.TALL_GRASS);
+            add(Block.DEAD_BUSH);
+            add(Block.DANDELION);
+            add(Block.RED_FLOWER);
+            add(Block.BROWN_MUSHROOM);
+            add(Block.RED_MUSHROOM);
+            add(Block.CACTUS);
+            add(Block.SUGARCANE_BLOCK);
+            add(Block.PUMPKIN);
+            add(Block.BROWN_MUSHROOM_BLOCK);
+            add(Block.RED_MUSHROOM_BLOCK);
+            add(Block.MELON_BLOCK);
+            add(Block.VINE);
+            add(Block.LILY_PAD);
+            add(Block.COCOA);
+            add(Block.LEAVES2);
+            add(Block.LOG2);
+            add(Block.DOUBLE_PLANT);
+        }
+    };
 
     protected StructureBoundingBox boundingBox;
     private int horizPos = -1;
@@ -37,7 +64,7 @@ public abstract class ScatteredStructurePiece implements StructurePiece {
             for (int z = this.boundingBox.getMin().z; z <= this.boundingBox.getMax().z; z++) {
                 int y = level.getChunk(x >> 4, z >> 4).getHighestBlockAt(x & 0xf, z & 0xf);
                 int id = level.getBlockIdAt(x, y - 1, z);
-                while ((id == Block.LEAVES || id == Block.LEAVES2 || id == Block.LOG || id == Block.LOG2 || id == Block.VINE) && y > 1) {
+                while (PLANTS.contains(id) && y > 1) {
                     y--;
                     id = level.getBlockIdAt(x, y - 1, z);
                 }
